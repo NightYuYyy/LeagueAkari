@@ -11,11 +11,13 @@ files:
   - '!{tsconfig.json,tsconfig.node.json,tsconfig.web.json,tsconfig.*.tsbuildinfo}'
   - '!{AGENTS.md,CLAUDE.md,PR_REQUIREMENTS.md}'
   - '!{.agents,.agents/**,.claude,.claude/**,.codex,.codex/**,.mcp.json,opencode.json}'
+  - '!{.omc,.omc/**,.impeccable.md,.dockerignore,Dockerfile.tablet,docker-compose.tablet.yml,tablet.*.vite.config.mts}'
   - '!.playwright-mcp{,/**}'
   - '!.storybook{,/**}'
   - '!bench-results{,/**}'
   - '!examples'
   - '!docs'
+  - '!dist{,/**}'
   - '!pictures'
   - '!rabi-*'
   - '!feedback-platform{,/**}'
@@ -30,6 +32,9 @@ files:
   - '!node_modules/better-sqlite3/build/Release/{.forge-meta,obj}{,/**}'
   - '!node_modules/league-akari-native-win32/{build,lib,scripts,node_modules}{,/**}'
   - '!node_modules/league-akari-native-win32/{binding.gyp,tsconfig.json,*.tsbuildinfo}'
+  - '!out/tablet-server{,/**}'
+  - '!out/tablet-web{,/**}'
+  - '!out/tablet-deploy-*{,/**}'
 
 electronLanguages:
   - zh-CN

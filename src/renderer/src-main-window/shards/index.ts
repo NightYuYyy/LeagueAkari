@@ -28,6 +28,7 @@ import { SettingUtilsRenderer } from '@renderer-shared/shards/setting-utils'
 import { SetupInAppScopeRenderer } from '@renderer-shared/shards/setup-in-app-scope'
 import { SgpRenderer } from '@renderer-shared/shards/sgp'
 import { StorageRenderer } from '@renderer-shared/shards/storage'
+import { TabletCompanionRenderer } from '@renderer-shared/shards/tablet-companion'
 import { WindowManagerRenderer } from '@renderer-shared/shards/window-manager'
 
 import { LeagueClientPeekRenderer } from './league-client-peek'
@@ -72,6 +73,7 @@ manager.use(SetupInAppScopeRenderer)
 manager.use(SgpRenderer)
 manager.use(SimpleNotificationsRenderer)
 manager.use(StorageRenderer)
+manager.use(TabletCompanionRenderer)
 manager.use(WindowManagerRenderer)
 
 export { manager }

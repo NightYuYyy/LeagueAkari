@@ -215,6 +215,54 @@ const targetDefinitions = [
     descriptionKey: 'settings.app.lcConnection.rebuildWmi.description'
   },
   {
+    id: 'app.tablet-companion',
+    route: { tab: 'basic' },
+    labelKey: 'settings.app.tabletCompanion.title',
+    searchable: false
+  },
+  {
+    id: 'app.tablet-companion.enabled',
+    route: { tab: 'basic' },
+    parentId: 'app.tablet-companion',
+    labelKey: 'settings.app.tabletCompanion.enabled.label',
+    descriptionKey: 'settings.app.tabletCompanion.enabled.description'
+  },
+  {
+    id: 'app.tablet-companion.server-url',
+    route: { tab: 'basic' },
+    parentId: 'app.tablet-companion',
+    labelKey: 'settings.app.tabletCompanion.serverUrl.label',
+    descriptionKey: 'settings.app.tabletCompanion.serverUrl.description'
+  },
+  {
+    id: 'app.tablet-companion.room-code',
+    route: { tab: 'basic' },
+    parentId: 'app.tablet-companion',
+    labelKey: 'settings.app.tabletCompanion.roomCode.label',
+    descriptionKey: 'settings.app.tabletCompanion.roomCode.description'
+  },
+  {
+    id: 'app.tablet-companion.publish-token',
+    route: { tab: 'basic' },
+    parentId: 'app.tablet-companion',
+    labelKey: 'settings.app.tabletCompanion.publishToken.label',
+    descriptionKey: 'settings.app.tabletCompanion.publishToken.description'
+  },
+  {
+    id: 'app.tablet-companion.status',
+    route: { tab: 'basic' },
+    parentId: 'app.tablet-companion',
+    labelKey: 'settings.app.tabletCompanion.status.label',
+    descriptionKey: 'settings.app.tabletCompanion.status.description'
+  },
+  {
+    id: 'app.tablet-companion.viewer-url',
+    route: { tab: 'basic' },
+    parentId: 'app.tablet-companion',
+    labelKey: 'settings.app.tabletCompanion.viewerUrl.label',
+    descriptionKey: 'settings.app.tabletCompanion.viewerUrl.description'
+  },
+  {
     id: 'app.misc',
     route: { tab: 'basic' },
     labelKey: 'settings.app.misc.title',

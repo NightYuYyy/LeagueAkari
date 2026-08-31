@@ -402,6 +402,119 @@
           </NButton>
         </SettingsRow>
       </SettingsSection>
+      <SettingsSection
+        setting-id="app.tablet-companion"
+        :title="t('settings.app.tabletCompanion.title')"
+        :footer="t('settings.app.tabletCompanion.footer')"
+      >
+        <SettingsRow
+          setting-id="app.tablet-companion.enabled"
+          :label="t('settings.app.tabletCompanion.enabled.label')"
+          :label-description="t('settings.app.tabletCompanion.enabled.description')"
+          :label-width="400"
+        >
+          <NSwitch
+            size="small"
+            :value="tcs.settings.enabled"
+            @update:value="(value: boolean) => tabletCompanion.setEnabled(value)"
+          />
+        </SettingsRow>
+        <NCollapseTransition :show="tcs.settings.enabled">
+          <SettingsRow
+            setting-id="app.tablet-companion.server-url"
+            :label="t('settings.app.tabletCompanion.serverUrl.label')"
+            :label-description="t('settings.app.tabletCompanion.serverUrl.description')"
+            :label-width="400"
+            control-full-line
+            align="start"
+          >
+            <NInput
+              v-model:value="tabletCompanionServerUrlDraft"
+              size="small"
+              :placeholder="t('settings.app.tabletCompanion.serverUrl.placeholder')"
+              @change="saveTabletCompanionServerUrl"
+            />
+          </SettingsRow>
+          <SettingsRow
+            setting-id="app.tablet-companion.room-code"
+            :label="t('settings.app.tabletCompanion.roomCode.label')"
+            :label-description="t('settings.app.tabletCompanion.roomCode.description')"
+            :label-width="400"
+          >
+            <NInput
+              v-model:value="tabletCompanionRoomCodeDraft"
+              class="w-56!"
+              size="small"
+              :placeholder="t('settings.app.tabletCompanion.roomCode.placeholder')"
+              @change="saveTabletCompanionRoomCode"
+            />
+          </SettingsRow>
+          <SettingsRow
+            setting-id="app.tablet-companion.publish-token"
+            :label="t('settings.app.tabletCompanion.publishToken.label')"
+            :label-description="t('settings.app.tabletCompanion.publishToken.description')"
+            :label-width="400"
+          >
+            <NInput
+              v-model:value="tabletCompanionPublishTokenDraft"
+              class="w-56!"
+              size="small"
+              type="password"
+              show-password-on="mousedown"
+              :placeholder="t('settings.app.tabletCompanion.publishToken.placeholder')"
+              @change="saveTabletCompanionPublishToken"
+            />
+          </SettingsRow>
+          <SettingsRow
+            setting-id="app.tablet-companion.status"
+            :label="t('settings.app.tabletCompanion.status.label')"
+            :label-description="tabletCompanionStatusDescription"
+            :label-width="400"
+          >
+            <div class="flex items-center gap-2">
+              <span
+                class="size-2 rounded-full"
+                :class="
+                  tcs.status === 'connected'
+                    ? 'bg-emerald-500'
+                    : tcs.status === 'error'
+                      ? 'bg-red-500'
+                      : 'bg-gray-400'
+                "
+              />
+              <span class="text-xs font-bold">{{ tabletCompanionStatusText }}</span>
+              <NButton
+                size="small"
+                secondary
+                :loading="testingTabletConnection"
+                @click="handleTestTabletCompanion"
+              >
+                {{ t('settings.app.tabletCompanion.status.test') }}
+              </NButton>
+            </div>
+          </SettingsRow>
+          <SettingsRow
+            setting-id="app.tablet-companion.viewer-url"
+            :label="t('settings.app.tabletCompanion.viewerUrl.label')"
+            :label-description="t('settings.app.tabletCompanion.viewerUrl.description')"
+            :label-width="400"
+            control-full-line
+            align="start"
+          >
+            <div class="flex w-full gap-2">
+              <NInput size="small" readonly :value="tabletCompanionViewerUrl" />
+              <NButton
+                size="small"
+                secondary
+                :disabled="!tabletCompanionViewerUrl"
+                @click="copyTabletCompanionViewerUrl"
+              >
+                {{ t('settings.app.tabletCompanion.viewerUrl.copy') }}
+              </NButton>
+            </div>
+          </SettingsRow>
+        </NCollapseTransition>
+      </SettingsSection>
       <SettingsSection setting-id="app.misc" :title="t('settings.app.misc.title')">
         <SettingsRow
           setting-id="app.misc.log-level"
@@ -507,6 +620,8 @@ import { useLoggerStore } from '@renderer-shared/shards/logger/store'
 import { SelfUpdateRenderer } from '@renderer-shared/shards/self-update'
 import { useSelfUpdateStore } from '@renderer-shared/shards/self-update/store'
 import { useSgpStore } from '@renderer-shared/shards/sgp/store'
+import { TabletCompanionRenderer } from '@renderer-shared/shards/tablet-companion'
+import { useTabletCompanionStore } from '@renderer-shared/shards/tablet-companion/store'
 import { WindowManagerRenderer } from '@renderer-shared/shards/window-manager'
 import {
   useMainWindowStore,
@@ -540,7 +655,7 @@ import {
   useDialog,
   useMessage
 } from 'naive-ui'
-import { computed } from 'vue'
+import { computed, ref, watch } from 'vue'
 
 import {
   MainWindowUiRenderer,
@@ -560,6 +675,7 @@ const wms = useWindowManagerStore()
 const as = useAppCommonStore()
 const mws = useMainWindowStore()
 const ls = useLoggerStore()
+const tcs = useTabletCompanionStore()
 const su = useInstance(SelfUpdateRenderer)
 const wm = useInstance(WindowManagerRenderer)
 const mui = useInstance(MainWindowUiRenderer)
@@ -568,6 +684,7 @@ const lcu = useInstance(LeagueClientUxRenderer)
 const lc = useInstance(LeagueClientRenderer)
 const lg = useInstance(LoggerRenderer)
 const sn = useInstance(SimpleNotificationsRenderer)
+const tabletCompanion = useInstance(TabletCompanionRenderer)
 
 useAkariNavigationStep<AppSettingsNavigationPayload>({
   key: APP_SETTINGS_NAVIGATION_STEP_KEY,
@@ -728,6 +845,88 @@ const updateHttpProxySettings = (obj: Partial<HttpProxySetting>) => {
 }
 
 const message = useMessage()
+const testingTabletConnection = ref(false)
+const tabletCompanionServerUrlDraft = ref('')
+const tabletCompanionRoomCodeDraft = ref('')
+const tabletCompanionPublishTokenDraft = ref('')
+
+watch(
+  () => tcs.settings.serverUrl,
+  (value) => (tabletCompanionServerUrlDraft.value = value),
+  { immediate: true }
+)
+watch(
+  () => tcs.settings.roomCode,
+  (value) => (tabletCompanionRoomCodeDraft.value = value),
+  { immediate: true }
+)
+watch(
+  () => tcs.settings.publishToken,
+  (value) => (tabletCompanionPublishTokenDraft.value = value),
+  { immediate: true }
+)
+
+const saveTabletCompanionServerUrl = (value: string) => {
+  const normalizedValue = value.trim()
+  tabletCompanionServerUrlDraft.value = normalizedValue
+  return tabletCompanion.setServerUrl(normalizedValue)
+}
+
+const saveTabletCompanionRoomCode = (value: string) => {
+  const normalizedValue = value.trim()
+  tabletCompanionRoomCodeDraft.value = normalizedValue
+  return tabletCompanion.setRoomCode(normalizedValue)
+}
+
+const saveTabletCompanionPublishToken = (value: string) => {
+  const normalizedValue = value.trim()
+  tabletCompanionPublishTokenDraft.value = normalizedValue
+  return tabletCompanion.setPublishToken(normalizedValue)
+}
+
+const tabletCompanionViewerUrl = computed(() => {
+  const serverUrl = tcs.settings.serverUrl.trim()
+  const roomCode = tcs.settings.roomCode.trim()
+  if (!serverUrl || !roomCode) return ''
+
+  try {
+    const base = new URL(serverUrl.endsWith('/') ? serverUrl : `${serverUrl}/`)
+    return new URL(`room/${encodeURIComponent(roomCode)}`, base).toString()
+  } catch {
+    return ''
+  }
+})
+
+const tabletCompanionStatusText = computed(() =>
+  t(`settings.app.tabletCompanion.status.values.${tcs.status}`)
+)
+
+const tabletCompanionStatusDescription = computed(() => {
+  if (tcs.lastError) return tcs.lastError
+  if (tcs.lastPublishedAt) {
+    return t('settings.app.tabletCompanion.status.lastPublishedAt', {
+      time: new Date(tcs.lastPublishedAt).toLocaleString()
+    })
+  }
+  return t('settings.app.tabletCompanion.status.description')
+})
+
+const handleTestTabletCompanion = async () => {
+  testingTabletConnection.value = true
+  try {
+    const result = await tabletCompanion.publishNow()
+    if (result.success) message.success(() => t('settings.app.tabletCompanion.status.testSuccess'))
+    else message.warning(() => t('settings.app.tabletCompanion.status.testFailed'))
+  } finally {
+    testingTabletConnection.value = false
+  }
+}
+
+const copyTabletCompanionViewerUrl = async () => {
+  if (!tabletCompanionViewerUrl.value) return
+  await navigator.clipboard.writeText(tabletCompanionViewerUrl.value)
+  message.success(() => t('settings.app.tabletCompanion.viewerUrl.copied'))
+}
 
 const handleCheckUpdates = async () => {
   const { result, reason } = await su.checkUpdates()

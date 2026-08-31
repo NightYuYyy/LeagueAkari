@@ -65,6 +65,11 @@ yarn dev
 yarn build:win
 ```
 
+## 3.2 Tablet Mayhem Companion
+
+The optional landscape-tablet web view and Docker deployment are documented in
+[`docs/tablet-companion.md`](docs/tablet-companion.md).
+
 ## Private Packages
 
 A valid GitHub PAT is required to install private packages.

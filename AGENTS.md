@@ -235,6 +235,14 @@ Plain CSS / scoped CSS usage:
 
 ## Common Tasks
 
+### Redeploy the Tablet Mayhem Companion
+
+The deployment runbook `docs/tablet-companion-deploy.md` is maintained outside the public
+repository because it records live infrastructure details. Ask the repository owner for it before
+changing the Hong Kong Docker deployment. The runbook records the live domain boundary,
+secret-handling rules, immutable image flow, candidate smoke test, public verification, and
+rollback procedure.
+
 ### Add a main-process feature
 
 Use the `league-akari-shard-development` skill first.

@@ -1,0 +1,9 @@
+{
+  "serverUrl": "https://akari.nightyu.com",
+  "roomCode": "replace-with-your-room-code",
+  "publishToken": "replace-with-your-publish-token",
+  "pollIntervalMs": 2500,
+  "heartbeatMs": 20000,
+  "publishTimeoutMs": 8000,
+  "leagueClientDir": ""
+}

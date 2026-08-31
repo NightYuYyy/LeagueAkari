@@ -133,6 +133,42 @@ settings:
         label: 重建 WMI
         description: 如果 WMI 无法正常使用，可尝试此修复选项
         rebuildButton: 重建 WMI
+    tabletCompanion:
+      title: 平板海克斯助手
+      footer: 仅推送当前英雄、模式和分路等必要状态，不会上传 LCU 凭据、账号令牌或聊天内容。
+      enabled:
+        label: 启用远程查看
+        description: 将当前英雄选择状态发布到配置的远程服务器
+      serverUrl:
+        label: 服务器地址
+        description: 填写远程服务根地址，不要粘贴带 /room/ 的平板访问地址
+        placeholder: https://api.example.com
+      roomCode:
+        label: 房间码
+        description: 必须与服务器 TABLET_ROOM_CODE 配置一致
+        placeholder: AKARI01
+      publishToken:
+        label: 发布密钥
+        description: 必须复制服务器部署时生成的 TABLET_PUBLISH_TOKEN，无法从网页地址推导；请勿分享
+        placeholder: 从服务器配置中复制发布密钥
+      status:
+        label: 连接状态
+        description: 配置完成后可主动测试一次状态发布
+        lastPublishedAt: 最近发布于 {{time}}
+        test: 测试连接
+        testSuccess: 状态已成功发送到远程服务器
+        testFailed: 状态发送失败，请检查地址、房间码和发布密钥
+        values:
+          disabled: 未启用
+          misconfigured: 配置不完整
+          publishing: 正在连接
+          connected: 已连接
+          error: 连接失败
+      viewerUrl:
+        label: 平板访问地址
+        description: 在平板浏览器中打开此地址；该地址不包含发布密钥
+        copy: 复制
+        copied: 已复制平板访问地址
     misc:
       title: 其他
       logLevel:

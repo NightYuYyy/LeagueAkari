@@ -1,0 +1,34 @@
+FROM node:22-bookworm-slim AS build
+
+WORKDIR /app
+RUN corepack enable
+
+COPY package.json yarn.lock .yarnrc.yml ./
+COPY .yarn/releases ./.yarn/releases
+COPY native/win32-x64/package.json ./native/win32-x64/package.json
+
+RUN yarn install --immutable --mode=skip-build
+
+COPY tablet.server.vite.config.mts tablet.web.vite.config.mts ./
+COPY tsconfig.json tsconfig.node.json tsconfig.web.json ./
+COPY tsconfig.tablet-server.json tsconfig.tablet-web.json ./
+COPY native/win32-x64 ./native/win32-x64
+COPY src/shared ./src/shared
+COPY src/tablet-server ./src/tablet-server
+COPY src/tablet-web ./src/tablet-web
+
+RUN yarn build:tablet
+
+FROM node:22-bookworm-slim AS runtime
+
+WORKDIR /app
+ENV NODE_ENV=production \
+    HOST=0.0.0.0 \
+    PORT=4174
+
+COPY --from=build /app/out/tablet-server ./out/tablet-server
+COPY --from=build /app/out/tablet-web ./out/tablet-web
+
+EXPOSE 4174
+USER node
+CMD ["node", "out/tablet-server/server.mjs"]

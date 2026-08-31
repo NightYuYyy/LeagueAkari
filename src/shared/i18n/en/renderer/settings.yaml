@@ -133,6 +133,42 @@ settings:
         label: Rebuild WMI
         description: If WMIC does not work properly, try this
         rebuildButton: Rebuild WMI
+    tabletCompanion:
+      title: Tablet Mayhem Companion
+      footer: Only the current champion, mode, position, and other required state are published. LCU credentials, account tokens, and chat content are never uploaded.
+      enabled:
+        label: Enable Remote View
+        description: Publish the current champion-select state to the configured remote server
+      serverUrl:
+        label: Server URL
+        description: Enter the remote service origin, not the tablet URL containing /room/
+        placeholder: https://api.example.com
+      roomCode:
+        label: Room Code
+        description: Must match the server TABLET_ROOM_CODE configuration
+        placeholder: AKARI01
+      publishToken:
+        label: Publish Token
+        description: Copy the TABLET_PUBLISH_TOKEN generated during server deployment. It cannot be derived from the tablet URL; keep it private
+        placeholder: Copy the publish token from the server configuration
+      status:
+        label: Connection Status
+        description: Test a state publish after completing the configuration
+        lastPublishedAt: Last published at {{time}}
+        test: Test Connection
+        testSuccess: State was published to the remote server
+        testFailed: Publishing failed. Check the URL, room code, and publish token
+        values:
+          disabled: Disabled
+          misconfigured: Incomplete configuration
+          publishing: Connecting
+          connected: Connected
+          error: Connection failed
+      viewerUrl:
+        label: Tablet URL
+        description: Open this address on the tablet. It never contains the publish token
+        copy: Copy
+        copied: Tablet URL copied
     misc:
       title: Misc
       logLevel:

@@ -33,6 +33,7 @@ import { SettingFactoryMain } from '@main/shards/setting-factory'
 import { SgpMain } from '@main/shards/sgp'
 import { StatisticsMain } from '@main/shards/statistics'
 import { StorageMain } from '@main/shards/storage'
+import { TabletCompanionMain } from '@main/shards/tablet-companion'
 import { TrayMain } from '@main/shards/tray'
 import { WindowManagerMain } from '@main/shards/window-manager'
 import { DEEP_LINK_PROTOCOL } from '@main/utils/deep-link'
@@ -344,6 +345,7 @@ export function bootstrap() {
     manager.use(SavedPlayerMain)
     manager.use(SgpMain)
     manager.use(StatisticsMain)
+    manager.use(TabletCompanionMain)
 
     // other
     manager.use(ExtraAssetsMain)

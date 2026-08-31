@@ -1,0 +1,29 @@
+services:
+  league-akari-tablet:
+    image: ${TABLET_IMAGE:-league-akari-tablet:latest}
+    container_name: league-akari-tablet
+    build:
+      context: .
+      dockerfile: Dockerfile.tablet
+    restart: unless-stopped
+    read_only: true
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    environment:
+      PORT: 4174
+      TABLET_ROOM_CODE: ${TABLET_ROOM_CODE}
+      TABLET_PUBLISH_TOKEN: ${TABLET_PUBLISH_TOKEN}
+    ports:
+      - '${TABLET_BIND:-127.0.0.1}:${TABLET_PORT:-4174}:4174'
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - fetch('http://127.0.0.1:4174/health').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
