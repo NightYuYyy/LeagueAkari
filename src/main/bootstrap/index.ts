@@ -23,6 +23,7 @@ import { LeagueClientUxMain } from '@main/shards/league-client-ux'
 import { LoggerFactoryMain } from '@main/shards/logger-factory'
 import { MainWindowUiMain } from '@main/shards/main-window-ui'
 import { MobxUtilsMain } from '@main/shards/mobx-utils'
+import { NetworkMain } from '@main/shards/network'
 import { OngoingGameMain } from '@main/shards/ongoing-game'
 import { RendererDebugMain } from '@main/shards/renderer-debug'
 import { RespawnTimerMain } from '@main/shards/respawn-timer'
@@ -315,6 +316,7 @@ export function bootstrap() {
 
     // connection & data provider shards
     manager.use(ConfigMigrateMain)
+    manager.use(NetworkMain)
     manager.use(SettingFactoryMain)
     manager.use(StorageMain)
 
